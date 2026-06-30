@@ -1,0 +1,24 @@
+name: Deploy to DigitalOcean Droplet
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            cd /opt/HCTrading || exit 1
+            git pull origin main
+            chmod +x setup.sh
+            ./setup.sh
+            sudo systemctl restart crypto_manager.service
+            sudo systemctl daemon-reload

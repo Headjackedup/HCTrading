@@ -1,0 +1,14 @@
+[Unit]
+Description=24/7 Crypto WebSockets Manager
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/HCTrading
+ExecStart=/usr/bin/python3 /opt/HCTrading/crypto_manager.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

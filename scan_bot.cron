@@ -1,0 +1,3 @@
+# Run scan_bot.py at 10:00 AM EST (which is 14:00 or 15:00 UTC depending on DST)
+# Assuming Droplet is UTC, let's use 14:00 UTC as an example (adjust as needed for EST/EDT)
+0 14 * * 1-5 cd /opt/HCTrading && /usr/bin/python3 scan_bot.py >> /var/log/scan_bot.log 2>&1
