@@ -15,15 +15,12 @@ jobs:
           host: ${{ secrets.DROPLET_IP }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
+          timeout: 120s
+          command_timeout: 10m
           script: |
-            set -e  # Exit on first error
-            cd /opt/HCTrading || exit 1
-            git pull origin main
-            if [ ! -f setup.sh ]; then
-              echo "ERROR: setup.sh not found"
-              exit 1
-            fi
-            chmod +x setup.sh
-            ./setup.sh 2>&1 || { echo "setup.sh failed with exit code $?"; exit 1; }
-            sudo systemctl restart crypto_manager.service
-            sudo systemctl daemon-reload
+            cd /opt/HCTrading || { echo "Directory not found"; exit 1; }
+            git pull origin main || { echo "Git pull failed"; exit 1; }
+            chmod +x setup.sh || { echo "chmod failed"; exit 1; }
+            ./setup.sh || { echo "setup.sh failed"; exit 1; }
+            sudo systemctl restart crypto_manager.service || { echo "Service restart failed"; exit 1; }
+            sudo systemctl daemon-reload || { echo "daemon-reload failed"; exit 1; }
